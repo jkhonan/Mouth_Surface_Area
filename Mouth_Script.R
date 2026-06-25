@@ -1,4 +1,4 @@
-#Written by Jackie Larson and Jenna Honan
+#Written by Jenna Honan
 
 setwd("C:/Users/jhonan/Desktop/Research_Projects/Mouth_SA_V/Mouth_Surface_Area_Volume")
 
@@ -8,6 +8,7 @@ library(dplyr)
 library(ggplot2)
 library(EnvStats)
 library(ggpubr)
+library(ggforce)
 
 Mouth_Study_Surface_Areas <- read_excel("Mouth_Study_Surface_Areas.xlsx")
 Mouth_Study_Demographics <- read_excel("Mouth_Study_Demographics.xlsx")
@@ -106,10 +107,21 @@ Mouth_Study_Demographics %>%
             n_Hisp=sum(Ethnicity=="Hispanic"),
             n_Non_Hip=sum(Ethnicity=="Non-Hispanic"))
 
+#Tests by gender
 t.test(Age_y~as.factor(Gender), data=Mouth_Study_Demographics)
+Mouth_Study_Demographics$Gender_Numeric <- ifelse(Mouth_Study_Demographics$Gender=="F", 1, 2)
+wilcox.test(x=Mouth_Study_Demographics$Age_y, y=Mouth_Study_Demographics$Gender_Numeric, paired = FALSE, correct = FALSE)
+
 t.test(Height_m~as.factor(Gender), data=Mouth_Study_Demographics)
+wilcox.test(x=Mouth_Study_Demographics$Height_m, y=Mouth_Study_Demographics$Gender_Numeric, paired = FALSE, correct = FALSE)
+
 t.test(Weight_kgs~as.factor(Gender), data=Mouth_Study_Demographics)
+wilcox.test(x=Mouth_Study_Demographics$Weight_kgs, y=Mouth_Study_Demographics$Gender_Numeric, paired = FALSE, correct = FALSE)
+
 t.test(BMI_kg_m2~as.factor(Gender), data=Mouth_Study_Demographics)
+wilcox.test(x=Mouth_Study_Demographics$BMI_kg_m2, y=Mouth_Study_Demographics$Gender_Numeric, paired = FALSE, correct = FALSE)
+
+
 chisq.test(Mouth_Study_Demographics$Ethnicity, Mouth_Study_Demographics$Gender)
 
 Mouth_Study_Surface_Areas$Average_Surface_Area_cm2 <- as.numeric(Mouth_Study_Surface_Areas$Average_Surface_Area_cm2)
@@ -301,7 +313,7 @@ geoMean(filtered_void_M$Average_Surface_Area_cm2, na.rm = T)
 geoSD(filtered_void_M$Average_Surface_Area_cm2, na.rm = T)
 
 ##Volume
-#Such low confidence that this portion of the study was discarded.
+#Low confidence
 #Volume_Only <- Mouth_Study_All %>%
 #  distinct(ParticipantID, .keep_all = TRUE)
 
@@ -320,10 +332,20 @@ geoSD(filtered_void_M$Average_Surface_Area_cm2, na.rm = T)
 
 #t-tests
 t.test(log(filtered_neutral_F$Average_Surface_Area_cm2), log(filtered_neutral_M$Average_Surface_Area_cm2))
+wilcox.test(x=filtered_neutral_F$Average_Surface_Area_cm2, y=filtered_neutral_M$Average_Surface_Area_cm2, paired = FALSE, correct = FALSE)
+
 t.test(log(filtered_pucker_F$Average_Surface_Area_cm2), log(filtered_pucker_M$Average_Surface_Area_cm2))
+wilcox.test(x=filtered_pucker_F$Average_Surface_Area_cm2, y=filtered_pucker_M$Average_Surface_Area_cm2, paired = FALSE, correct = FALSE)
+
 t.test(log(filtered_cup_F$Average_Surface_Area_cm2), log(filtered_cup_M$Average_Surface_Area_cm2))
+wilcox.test(x=(filtered_cup_F$Average_Surface_Area_cm2), y=(filtered_cup_M$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+
 t.test(log(filtered_straw_F$Average_Surface_Area_cm2), log(filtered_straw_M$Average_Surface_Area_cm2))
+wilcox.test(x=(filtered_straw_F$Average_Surface_Area_cm2), y=(filtered_straw_M$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+
 t.test(log(filtered_void_F$Average_Surface_Area_cm2), log(filtered_void_M$Average_Surface_Area_cm2))
+wilcox.test(x=(filtered_void_F$Average_Surface_Area_cm2), y=(filtered_void_M$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+
 #t.test(log(Volume_Only_F$Volume_Full_Missing_Piece_mL), log(Volume_Only_M$Volume_Full_Missing_Piece_mL))
 
 
@@ -395,6 +417,16 @@ geoSD(filtered_void_H$Average_Surface_Area_cm2, na.rm = T)
 geoMean(filtered_void_NH$Average_Surface_Area_cm2, na.rm = T)
 geoSD(filtered_void_NH$Average_Surface_Area_cm2, na.rm = T)
 
+Mouth_Study_All %>% 
+  group_by(Print_Type, Gender) %>% 
+  summarise(mean=mean(Average_Surface_Area_cm2, na.rm=T),
+            sd=sd(Average_Surface_Area_cm2, na.rm = T))
+
+Mouth_Study_All %>% 
+  group_by(Print_Type, Ethnicity) %>% 
+  summarise(mean=mean(Average_Surface_Area_cm2, na.rm=T),
+            sd=sd(Average_Surface_Area_cm2, na.rm = T))
+
 ##Volume
 #Such low confidence that this portion of the study was discarded.
 #Volume_Only <- Mouth_Study_All %>%
@@ -415,10 +447,20 @@ geoSD(filtered_void_NH$Average_Surface_Area_cm2, na.rm = T)
 
 #t-tests
 t.test(log(filtered_neutral_H$Average_Surface_Area_cm2), log(filtered_neutral_NH$Average_Surface_Area_cm2))
+wilcox.test(x=(filtered_neutral_H$Average_Surface_Area_cm2), y=(filtered_neutral_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+
 t.test(log(filtered_pucker_H$Average_Surface_Area_cm2), log(filtered_pucker_NH$Average_Surface_Area_cm2))
+wilcox.test(x=(filtered_pucker_H$Average_Surface_Area_cm2), y=(filtered_pucker_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+
 t.test(log(filtered_cup_H$Average_Surface_Area_cm2), log(filtered_cup_NH$Average_Surface_Area_cm2))
+wilcox.test(x=(filtered_cup_H$Average_Surface_Area_cm2), y=(filtered_cup_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+
 t.test(log(filtered_straw_H$Average_Surface_Area_cm2), log(filtered_straw_NH$Average_Surface_Area_cm2))
+wilcox.test(x=(filtered_straw_H$Average_Surface_Area_cm2), y=(filtered_straw_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+
 t.test(log(filtered_void_H$Average_Surface_Area_cm2), log(filtered_void_NH$Average_Surface_Area_cm2))
+wilcox.test(x=(filtered_void_H$Average_Surface_Area_cm2), y=(filtered_void_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+
 #t.test(log(Volume_Only_H$Volume_Full_Missing_Piece_mL), log(Volume_Only_NH$Volume_Full_Missing_Piece_mL))
 
 
@@ -429,15 +471,29 @@ cor.test(log(filtered_pucker2$Average_Surface_Area_cm2), filtered_pucker2$Height
 cor.test(log(filtered_cup2$Average_Surface_Area_cm2), filtered_cup2$Height_m, method = "pearson")
 cor.test(log(filtered_straw2$Average_Surface_Area_cm2), filtered_straw2$Height_m, method = "pearson")
 cor.test(log(filtered_void2$Average_Surface_Area_cm2), filtered_void2$Height_m, method = "pearson")
+
+cor.test(filtered_neutral2$Average_Surface_Area_cm2, filtered_neutral2$Height_m, method = "spearman")
+cor.test(filtered_pucker2$Average_Surface_Area_cm2, filtered_pucker2$Height_m, method = "spearman")
+cor.test(filtered_cup2$Average_Surface_Area_cm2, filtered_cup2$Height_m, method = "spearman")
+cor.test(filtered_straw2$Average_Surface_Area_cm2, filtered_straw2$Height_m, method = "spearman")
+cor.test(filtered_void2$Average_Surface_Area_cm2, filtered_void2$Height_m, method = "spearman")
+
 #cor.test(log(Volume_Only$Volume_Full_Missing_Piece_mL), Volume_Only$Height_m, method = "pearson")
 
 ##Weight
-cor.test(log(filtered_neutral2$Average_Surface_Area_cm2), filtered_neutral2$Weight_kgs, method = "pearson")
-cor.test(log(filtered_pucker2$Average_Surface_Area_cm2), filtered_pucker2$Weight_kgs, method = "pearson")
-cor.test(log(filtered_cup2$Average_Surface_Area_cm2), filtered_cup2$Weight_kgs, method = "pearson")
-cor.test(log(filtered_straw2$Average_Surface_Area_cm2), filtered_straw2$Weight_kgs, method = "pearson")
-cor.test(log(filtered_void2$Average_Surface_Area_cm2), filtered_void2$Weight_kgs, method = "pearson")
+cor.test(filtered_neutral2$Average_Surface_Area_cm2, filtered_neutral2$Weight_kgs, method = "pearson")
+cor.test(filtered_pucker2$Average_Surface_Area_cm2, filtered_pucker2$Weight_kgs, method = "pearson")
+cor.test(filtered_cup2$Average_Surface_Area_cm2, filtered_cup2$Weight_kgs, method = "pearson")
+cor.test(filtered_straw2$Average_Surface_Area_cm2, filtered_straw2$Weight_kgs, method = "pearson")
+cor.test(filtered_void2$Average_Surface_Area_cm2, filtered_void2$Weight_kgs, method = "pearson")
 #cor.test(log(Volume_Only$Volume_Full_Missing_Piece_mL), Volume_Only$Weight_kgs, method = "pearson")
+
+cor.test((filtered_neutral2$Average_Surface_Area_cm2), filtered_neutral2$Weight_kgs, method = "spearman")
+cor.test((filtered_pucker2$Average_Surface_Area_cm2), filtered_pucker2$Weight_kgs, method = "spearman")
+cor.test((filtered_cup2$Average_Surface_Area_cm2), filtered_cup2$Weight_kgs, method = "spearman")
+cor.test((filtered_straw2$Average_Surface_Area_cm2), filtered_straw2$Weight_kgs, method = "spearman")
+cor.test((filtered_void2$Average_Surface_Area_cm2), filtered_void2$Weight_kgs, method = "spearman")
+
 
 ##BMI
 cor.test(log(filtered_neutral2$Average_Surface_Area_cm2), filtered_neutral2$BMI_kg_m2, method = "pearson")
@@ -447,9 +503,14 @@ cor.test(log(filtered_straw2$Average_Surface_Area_cm2), filtered_straw2$BMI_kg_m
 cor.test(log(filtered_void2$Average_Surface_Area_cm2), filtered_void2$BMI_kg_m2, method = "pearson")
 #cor.test(log(Volume_Only$Volume_Full_Missing_Piece_mL), Volume_Only$BMI_kg_m2, method = "pearson")
 
+cor.test(filtered_neutral2$Average_Surface_Area_cm2, filtered_neutral2$BMI_kg_m2, method = "spearman")
+cor.test(filtered_pucker2$Average_Surface_Area_cm2, filtered_pucker2$BMI_kg_m2, method = "spearman")
+cor.test(filtered_cup2$Average_Surface_Area_cm2, filtered_cup2$BMI_kg_m2, method = "spearman")
+cor.test(filtered_straw2$Average_Surface_Area_cm2, filtered_straw2$BMI_kg_m2, method = "spearman")
+cor.test(filtered_void2$Average_Surface_Area_cm2, filtered_void2$BMI_kg_m2, method = "spearman")
 
 #Graphs
-ggplot(data=filtered_neutral2, aes(x=Height_m, y=log(Average_Surface_Area_cm2)))+
+ggplot(data=filtered_neutral2, aes(x=Height_m, y=Average_Surface_Area_cm2))+
   geom_point()+
   geom_smooth(method = "lm", se=F)+
   theme(panel.background = element_rect("#ffffff"),
@@ -460,7 +521,7 @@ ggplot(data=filtered_neutral2, aes(x=Height_m, y=log(Average_Surface_Area_cm2)))
   stat_cor(method = "pearson", label.x = 1.6, label.y = 2.6)
 
 
-ggplot(data=filtered_pucker2, aes(x=Weight_kgs, y=log(Average_Surface_Area_cm2)))+
+ggplot(data=filtered_pucker2, aes(x=Weight_kgs, y=Average_Surface_Area_cm2))+
   geom_point()+
   geom_smooth(method = "lm", se=F)+
   theme(panel.background = element_rect("#ffffff"),
@@ -471,7 +532,7 @@ ggplot(data=filtered_pucker2, aes(x=Weight_kgs, y=log(Average_Surface_Area_cm2))
   stat_cor(method = "pearson", label.x = 55, label.y = 2.7)
 
 ##Just to see
-ggplot(data=filtered_neutral2, aes(x=Weight_kgs, y=log(Average_Surface_Area_cm2)))+
+ggplot(data=filtered_neutral2, aes(x=Weight_kgs, y=Average_Surface_Area_cm2))+
   geom_point()+
   geom_smooth(method = "lm", se=F)+
   theme(panel.background = element_rect("#ffffff"),
@@ -489,23 +550,42 @@ Mouth_Study_All$Print_Type <- factor(Mouth_Study_All$Print_Type , levels=c("Neut
 
 
 ggplot(data=Mouth_Study_All, aes(x=as.factor(Print_Type), y=Average_Surface_Area_cm2))+
-  geom_boxplot(aes(fill=Gender))+
+  geom_boxplot(aes(fill=Gender), position = position_dodge(width = 0.85), width=0.5)+
+  #geom_violin(aes(fill=Gender), alpha = 0.5, position = position_dodge(width = 0.85))+
+  geom_jitter(aes(fill=Gender), shape=79, position = position_dodge(width = 0.85))+
+  theme(panel.background = element_rect("#ffffff"),
+        text = element_text(size=22),
+        axis.line = element_line("#000000"))+
+  scale_fill_manual(labels = c("M"="Male", "F"="Female"),
+                      values = c("M"="#7AC5CD", "F"="#EEA2AD"))+
+  scale_color_manual(labels = c("M"="Male", "F"="Female"),
+                    values = c("Ma"="#878787", "Fe"="#878787"))+
+  xlab("")+
+  ylab(bquote("Surface Area "~(cm^2)))
+
+ggplot(data=Mouth_Study_All, aes(x=as.factor(Print_Type), y=Average_Surface_Area_cm2))+
+  geom_violin(aes(fill=Gender), alpha = 0.5, position = position_dodge(width = 0.85))+
+  geom_jitter(aes(fill=Gender), shape=20, alpha=0.75, position = position_dodge(width = 0.85))+
   theme(panel.background = element_rect("#ffffff"),
         text = element_text(size=15),
         axis.line = element_line("#000000"))+
-  scale_fill_manu(labels = c("M"="Male", "F"="Female"),
-                      values = c("M"="darkorchid3", "F"="lightseagreen"))+
+  scale_fill_manual(labels = c("M"="Male", "F"="Female"),
+                    values = c("M"="#7AC5CD", "F"="#EEA2AD"))+
   xlab("")+
   ylab(bquote("Surface Area "~(cm^2)))
 
 
 ggplot(data=Mouth_Study_All, aes(x=as.factor(Print_Type), y=Average_Surface_Area_cm2))+
-  geom_boxplot(aes(fill=Ethnicity))+
+  geom_boxplot(aes(fill=Ethnicity), position = position_dodge(width = 0.85), width=0.5)+
+  #geom_violin(aes(fill=Ethnicity), alpha = 0.7, position = position_dodge(width = 0.85))+
+  geom_jitter(aes(fill=Ethnicity), shape=79, position = position_dodge(width = 0.85))+
   theme(panel.background = element_rect("#ffffff"),
-        text = element_text(size=15),
+        text = element_text(size=22),
         axis.line = element_line("#000000"))+
-  scale_fill_manual(breaks = c("Hispanic", "Non-Hispanic"), 
-                    values=c("#add8e6", "#ffa500"))+
+  scale_fill_manual(labels = c("Hispanic", "Non-Hispanic"), 
+                    values=c("gold3", "#53868B"))+
+  scale_color_manual(labels = c("Hispanic", "Non-Hispanic"),
+                     values = c("M"="#878787", "F"="#878787"))+
   xlab("")+
   ylab(bquote("Surface Area "~(cm^2)))
 
