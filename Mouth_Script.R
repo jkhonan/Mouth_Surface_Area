@@ -9,6 +9,7 @@ library(ggplot2)
 library(EnvStats)
 library(ggpubr)
 library(ggforce)
+library(DescTools)
 
 Mouth_Study_Surface_Areas <- read_excel("Mouth_Study_Surface_Areas.xlsx")
 Mouth_Study_Demographics <- read_excel("Mouth_Study_Demographics.xlsx")
@@ -332,19 +333,19 @@ geoSD(filtered_void_M$Average_Surface_Area_cm2, na.rm = T)
 
 #t-tests
 t.test(log(filtered_neutral_F$Average_Surface_Area_cm2), log(filtered_neutral_M$Average_Surface_Area_cm2))
-wilcox.test(x=filtered_neutral_F$Average_Surface_Area_cm2, y=filtered_neutral_M$Average_Surface_Area_cm2, paired = FALSE, correct = FALSE)
+wilcox.test(x=filtered_neutral_M$Average_Surface_Area_cm2, y=filtered_neutral_F$Average_Surface_Area_cm2, paired = FALSE, correct = FALSE, conf.int = TRUE)
 
 t.test(log(filtered_pucker_F$Average_Surface_Area_cm2), log(filtered_pucker_M$Average_Surface_Area_cm2))
-wilcox.test(x=filtered_pucker_F$Average_Surface_Area_cm2, y=filtered_pucker_M$Average_Surface_Area_cm2, paired = FALSE, correct = FALSE)
+wilcox.test(x=filtered_pucker_M$Average_Surface_Area_cm2, y=filtered_pucker_F$Average_Surface_Area_cm2, paired = FALSE, correct = FALSE, conf.int = TRUE)
 
 t.test(log(filtered_cup_F$Average_Surface_Area_cm2), log(filtered_cup_M$Average_Surface_Area_cm2))
-wilcox.test(x=(filtered_cup_F$Average_Surface_Area_cm2), y=(filtered_cup_M$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+wilcox.test(x=(filtered_cup_M$Average_Surface_Area_cm2), y=(filtered_cup_F$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE, conf.int = TRUE)
 
 t.test(log(filtered_straw_F$Average_Surface_Area_cm2), log(filtered_straw_M$Average_Surface_Area_cm2))
-wilcox.test(x=(filtered_straw_F$Average_Surface_Area_cm2), y=(filtered_straw_M$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+wilcox.test(x=(filtered_straw_M$Average_Surface_Area_cm2), y=(filtered_straw_F$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE, conf.int = TRUE)
 
 t.test(log(filtered_void_F$Average_Surface_Area_cm2), log(filtered_void_M$Average_Surface_Area_cm2))
-wilcox.test(x=(filtered_void_F$Average_Surface_Area_cm2), y=(filtered_void_M$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+wilcox.test(x=(filtered_void_M$Average_Surface_Area_cm2), y=(filtered_void_F$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE, conf.int = TRUE)
 
 #t.test(log(Volume_Only_F$Volume_Full_Missing_Piece_mL), log(Volume_Only_M$Volume_Full_Missing_Piece_mL))
 
@@ -447,24 +448,25 @@ Mouth_Study_All %>%
 
 #t-tests
 t.test(log(filtered_neutral_H$Average_Surface_Area_cm2), log(filtered_neutral_NH$Average_Surface_Area_cm2))
-wilcox.test(x=(filtered_neutral_H$Average_Surface_Area_cm2), y=(filtered_neutral_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+wilcox.test(x=(filtered_neutral_H$Average_Surface_Area_cm2), y=(filtered_neutral_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE, conf.int = TRUE)
+
 
 t.test(log(filtered_pucker_H$Average_Surface_Area_cm2), log(filtered_pucker_NH$Average_Surface_Area_cm2))
-wilcox.test(x=(filtered_pucker_H$Average_Surface_Area_cm2), y=(filtered_pucker_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+wilcox.test(x=(filtered_pucker_H$Average_Surface_Area_cm2), y=(filtered_pucker_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE, conf.int = TRUE)
 
 t.test(log(filtered_cup_H$Average_Surface_Area_cm2), log(filtered_cup_NH$Average_Surface_Area_cm2))
-wilcox.test(x=(filtered_cup_H$Average_Surface_Area_cm2), y=(filtered_cup_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+wilcox.test(x=(filtered_cup_H$Average_Surface_Area_cm2), y=(filtered_cup_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE, conf.int = TRUE)
 
 t.test(log(filtered_straw_H$Average_Surface_Area_cm2), log(filtered_straw_NH$Average_Surface_Area_cm2))
-wilcox.test(x=(filtered_straw_H$Average_Surface_Area_cm2), y=(filtered_straw_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+wilcox.test(x=(filtered_straw_H$Average_Surface_Area_cm2), y=(filtered_straw_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE, conf.int = TRUE)
 
 t.test(log(filtered_void_H$Average_Surface_Area_cm2), log(filtered_void_NH$Average_Surface_Area_cm2))
-wilcox.test(x=(filtered_void_H$Average_Surface_Area_cm2), y=(filtered_void_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE)
+wilcox.test(x=(filtered_void_H$Average_Surface_Area_cm2), y=(filtered_void_NH$Average_Surface_Area_cm2), paired = FALSE, correct = FALSE, conf.int = TRUE)
 
 #t.test(log(Volume_Only_H$Volume_Full_Missing_Piece_mL), log(Volume_Only_NH$Volume_Full_Missing_Piece_mL))
 
 
-#Correlations
+#Correlations (Spearman more appropriate here)
 ##Height
 cor.test(log(filtered_neutral2$Average_Surface_Area_cm2), filtered_neutral2$Height_m, method = "pearson")
 cor.test(log(filtered_pucker2$Average_Surface_Area_cm2), filtered_pucker2$Height_m, method = "pearson")
@@ -477,6 +479,12 @@ cor.test(filtered_pucker2$Average_Surface_Area_cm2, filtered_pucker2$Height_m, m
 cor.test(filtered_cup2$Average_Surface_Area_cm2, filtered_cup2$Height_m, method = "spearman")
 cor.test(filtered_straw2$Average_Surface_Area_cm2, filtered_straw2$Height_m, method = "spearman")
 cor.test(filtered_void2$Average_Surface_Area_cm2, filtered_void2$Height_m, method = "spearman")
+
+SpearmanRho(filtered_neutral2$Average_Surface_Area_cm2, filtered_neutral2$Height_m, conf.level = 0.95)
+SpearmanRho(filtered_pucker2$Average_Surface_Area_cm2, filtered_pucker2$Height_m, conf.level = 0.95)
+SpearmanRho(filtered_cup2$Average_Surface_Area_cm2, filtered_cup2$Height_m, conf.level = 0.95)
+SpearmanRho(filtered_straw2$Average_Surface_Area_cm2, filtered_straw2$Height_m, conf.level = 0.95)
+SpearmanRho(filtered_void2$Average_Surface_Area_cm2, filtered_void2$Height_m, conf.level = 0.95)
 
 #cor.test(log(Volume_Only$Volume_Full_Missing_Piece_mL), Volume_Only$Height_m, method = "pearson")
 
@@ -494,6 +502,11 @@ cor.test((filtered_cup2$Average_Surface_Area_cm2), filtered_cup2$Weight_kgs, met
 cor.test((filtered_straw2$Average_Surface_Area_cm2), filtered_straw2$Weight_kgs, method = "spearman")
 cor.test((filtered_void2$Average_Surface_Area_cm2), filtered_void2$Weight_kgs, method = "spearman")
 
+SpearmanRho((filtered_neutral2$Average_Surface_Area_cm2), filtered_neutral2$Weight_kgs, conf.level = 0.95)
+SpearmanRho((filtered_pucker2$Average_Surface_Area_cm2), filtered_pucker2$Weight_kgs, conf.level = 0.95)
+SpearmanRho((filtered_cup2$Average_Surface_Area_cm2), filtered_cup2$Weight_kgs, conf.level = 0.95)
+SpearmanRho(filtered_straw2$Average_Surface_Area_cm2, filtered_straw2$Height_m, conf.level = 0.95)
+SpearmanRho((filtered_void2$Average_Surface_Area_cm2), filtered_void2$Weight_kgs, conf.level = 0.95)
 
 ##BMI
 cor.test(log(filtered_neutral2$Average_Surface_Area_cm2), filtered_neutral2$BMI_kg_m2, method = "pearson")
@@ -508,6 +521,12 @@ cor.test(filtered_pucker2$Average_Surface_Area_cm2, filtered_pucker2$BMI_kg_m2, 
 cor.test(filtered_cup2$Average_Surface_Area_cm2, filtered_cup2$BMI_kg_m2, method = "spearman")
 cor.test(filtered_straw2$Average_Surface_Area_cm2, filtered_straw2$BMI_kg_m2, method = "spearman")
 cor.test(filtered_void2$Average_Surface_Area_cm2, filtered_void2$BMI_kg_m2, method = "spearman")
+
+SpearmanRho(filtered_neutral2$Average_Surface_Area_cm2, filtered_neutral2$BMI_kg_m2, conf.level = 0.95)
+SpearmanRho(filtered_pucker2$Average_Surface_Area_cm2, filtered_pucker2$BMI_kg_m2, conf.level = 0.95)
+SpearmanRho(filtered_cup2$Average_Surface_Area_cm2, filtered_cup2$BMI_kg_m2, conf.level = 0.95)
+SpearmanRho(filtered_straw2$Average_Surface_Area_cm2, filtered_straw2$BMI_kg_m2, conf.level = 0.95)
+SpearmanRho(filtered_void2$Average_Surface_Area_cm2, filtered_void2$BMI_kg_m2, conf.level = 0.95)
 
 #Graphs
 ggplot(data=filtered_neutral2, aes(x=Height_m, y=Average_Surface_Area_cm2))+
